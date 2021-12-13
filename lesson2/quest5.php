@@ -8,7 +8,7 @@ function dateText($val,$options){
 	if ($num > 19) {
 		$num = $num % 10; 
 	}
-    $text=$val. " ";
+    $out=$val." ";
     switch ($num) {
 		case 1:  $out .= $options[0]; break;
 		case 2: 
@@ -20,9 +20,7 @@ function dateText($val,$options){
 
 
 }
-echo $hour; 
 
 echo  dateText($hour,$hourVariants);
-echo $minute; 
-
+echo " ";
 echo  dateText($minute,$minuteVariants);
