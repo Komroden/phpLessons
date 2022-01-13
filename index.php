@@ -1,69 +1,55 @@
 <?php
-    $a = 5;
-    $b = '05';
-    var_dump($a == $b);          // Почему true?  Переменная b приводится к типу integer первый 0 опускается  05=>5=>5=5 true
-    var_dump((int)'012345');     // Почему 12345? строка приводится к чилу типа integer первый 0 опускается
-    var_dump((float)123.0 === (int)123.0); // Почему false? при строгом равенстве сравниваются значения и типы , типы операторов разные поэтому false
-    var_dump((int)0 === (int)'hello, world'); // Почему true? Приведение строки без цифр в тип integer получается 0 , так как типы и значения равны поэтому true
-
-    $nameSite="Lesson1";
-    $title="php_lesson";
-    $year=date("Y");
-
-    $c=1;
-    $d=2;
-    $d=$c++;
-    echo $c." ".$d
+session_start();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<meta name="author" content="Luka Cvrk (www.solucija.com)" />
-	<link rel="stylesheet" href="css/main.css" type="text/css" />
-	<title><?php echo $nameSite?></title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-	<div id="content">
-		<h1><?php echo $title." ".$year?> </h1>
-		
-		<ul id="menu">
-			<li><a href="#">home</a></li>
-			<li><a href="#">archive</a></li>
-			<li><a href="#">contact</a></li>
-		</ul>
-	
-		<div class="post">
-			<div class="details">
-				<h2><a href="#">Nunc commodo euismod massa quis vestibulum</a></h2>
-				<p class="info">posted 3 hours ago in <a href="#">general</a></p>
-			
-			</div>
-			<div class="body">
-				<p>Nunc eget nunc libero. Nunc commodo euismod massa quis vestibulum. Proin mi nibh, dignissim a pellentesque at, ultricies sit amet sapien. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel lorem eu libero laoreet facilisis. Aenean placerat, ligula quis placerat iaculis, mi magna luctus nibh, adipiscing pretium erat neque vitae augue. Quisque consectetur odio ut sem semper commodo. Maecenas iaculis leo a ligula euismod condimentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Ut enim risus, rhoncus sit amet ultricies vel, aliquet ut dolor. Duis iaculis urna vel massa ultricies suscipit. Phasellus diam sapien, fermentum a eleifend non, luctus non augue. Quisque scelerisque purus quis eros sollicitudin gravida. Aliquam erat volutpat. Donec a sem consequat tortor posuere dignissim sit amet at ipsum.</p>
-			</div>
-			<div class="x"></div>
-		</div>
-		
-		<div class="col">
-			<h3><a href="#">Ut enim risus rhoncus</a></h3>
-			<p>Quisque consectetur odio ut sem semper commodo. Maecenas iaculis leo a ligula euismod condimentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Ut enim risus, rhoncus sit amet ultricies vel, aliquet ut dolor. Duis iaculis urna vel massa ultricies suscipit. Phasellus diam sapien, fermentum a eleifend non, luctus non augue. Quisque scelerisque purus quis eros sollicitudin gravida. Aliquam erat volutpat. Donec a sem consequat tortor posuere dignissim sit amet at.</p>
-			<p>&not; <a href="#">read more</a></p>
-		</div>
-		<div class="col">
-			<h3><a href="#">Maecenas iaculis leo</a></h3>
-			<p>Quisque consectetur odio ut sem semper commodo. Maecenas iaculis leo a ligula euismod condimentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Ut enim risus, rhoncus sit amet ultricies vel, aliquet ut dolor. Duis iaculis urna vel massa ultricies suscipit. Phasellus diam sapien, fermentum a eleifend non, luctus non augue. Quisque scelerisque purus quis eros sollicitudin gravida. Aliquam erat volutpat. Donec a sem consequat tortor posuere dignissim sit amet at.</p>
-			<p>&not; <a href="#">read more</a></p>
-		</div>
-		<div class="col last">
-			<h3><a href="#">Quisque consectetur odio</a></h3>
-			<p>Quisque consectetur odio ut sem semper commodo. Maecenas iaculis leo a ligula euismod condimentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Ut enim risus, rhoncus sit amet ultricies vel, aliquet ut dolor. Duis iaculis urna vel massa ultricies suscipit. Phasellus diam sapien, fermentum a eleifend non, luctus non augue. Quisque scelerisque purus quis eros sollicitudin gravida. Aliquam erat volutpat. Donec a sem consequat tortor posuere dignissim sit amet at.</p>
-			<p>&not; <a href="#">read more</a></p>
-		</div>
-		
-		<div id="footer">
-		      <p>Copyright &copy; <em>minimalistica</em> &middot; Design: Luka Cvrk, <a href="http://www.solucija.com/" title="Free CSS Templates">Solucija</a></p>
-		</div>	
-	</div>
+    <div class="header">
+        <div class="link_wrapper">
+        <a href="cards.php" class="link">Товары</a>
+        </div>
+        
+        <?php
+        if($_SESSION['login']==='admin'):?>
+        <div class="link_wrapper">
+        <a href="admin.php" class="link">Админ-панель</a>
+        </div>
+        <?php
+         endif;
+        ?>
+        <?php
+        if($_SESSION['login']&&$_SESSION['login']!=="admin"):?>
+        <div class="link_wrapper">
+        <a href="ordersUser.php" class="link">Ваши заказы</a>
+        </div>
+        <?php
+         endif;
+        ?>
+        <div class="link_wrapper">
+        <a href="login.php" class="link">Вход</a>
+        </div>
+        <div class="link_wrapper">
+        <a href="register.php" class="link">Регистрация</a>
+        </div>
+        <div class="link_wrapper">
+        <a href="cart.php" class="link">Корзина</a>
+        </div>
+        <div class="link_wrapper">
+        <a href="form.php" class="link">Отзывы</a>
+        </div>
+    </div>
+    <div class="content">
+        <h1 class="title">Добро пожаловать в наш магазин!</h1>
+    </div>
+    
+    
 </body>
 </html>
