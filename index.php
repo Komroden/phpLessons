@@ -1,35 +1,50 @@
 <?php
-
-CONST PHOTO_PATH = 'data/photo';
-CONST PHOTO_SMALL_PATH = 'data/photo_small';
-
 // подгружаем и активируем авто-загрузчик Twig-а
 require_once 'Twig/Autoloader.php';
 Twig_Autoloader::register();
 
 try {
-  // указывае где хранятся шаблоны
+  $dbh = new PDO('mysql:dbname=goods;host=localhost', 'root', 'root');
+} catch (PDOException $e) {
+  echo "Error: Could not connect. " . $e->getMessage();
+}
+
+// установка error режима
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+try {
+  if(isset($_GET['limit'])){
+    $limit = $_GET['limit'];
+  } else {
+    $limit = 5;
+  }
+  // формируем SELECT запрос
+  // в результате каждая строка таблицы будет объектом
+  $sql = "SELECT goods.id AS id, goods.name AS name, goods.src AS src, goods.srcBig AS srcBig, goods.descriptionFull AS description, goods.price AS price FROM goods limit $limit";
+  $sth = $dbh->query($sql);
+  while ($row = $sth->fetchObject()) {
+    $data[] = $row;
+  }
+
+  print_r($_GET['a']);
+  
+  // закрываем соединение
+  unset($dbh); 
+
   $loader = new Twig_Loader_Filesystem('templates');
   
-  // инициализируем Twig
   $twig = new Twig_Environment($loader);
   
-  // подгружаем шаблон
-  $template = $twig->loadTemplate('index.tmpl');
-  
-  // Получаем список фотографий 
-  $photos_in_dir = array_slice(scandir(PHOTO_PATH), 2);
+  $template = $twig->loadTemplate('autos.tmpl');
 
-  // передаём в шаблон переменные и значения
-  // выводим сформированное содержание
-  //echo print_r($photos_in_dir);
-  echo $template->render(array(
-            'title' => 'Список фотографий альбома',
-            'path_to_photo_small' => PHOTO_SMALL_PATH,
-            'photos' => $photos_in_dir
-            ));
+  echo $template->render(array (
+    'data' => $data,
+    'count'=>count($data)
+  ));
+
   
 } catch (Exception $e) {
   die ('ERROR: ' . $e->getMessage());
 }
 ?>
+
