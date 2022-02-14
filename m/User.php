@@ -1,40 +1,44 @@
 <?php
+	include_once 'config/db.php';
 
-	include_once 'SQL.php';
-
-	class User extends SQL {
+	class User {
 		
 		public $user_id, $user_login, $user_name, $user_password;
 
-		public function getUser ($id) {
-			
-			return parent::Select('users', 'id', $id);
+		public function __construct () {
 		}
 
-		public function newUser ($name, $login, $password) {
-			
-			$object = [
-				'name' => strip_tags($name),
-				'login' => strip_tags($login),
-				'password' => parent::Password(strip_tags($name), strip_tags($password))
-			];
-			$user = parent::Select('users', 'login', strip_tags($login));
+		public function pass ($name, $password) {
+			return strrev(md5($name)) . md5($password);
+		}
 
+		public function connecting () {
+			return new PDO(DRIVER . ':host='. SERVER . ';dbname=' . DB, USERNAME, PASSWORD);
+		}
+
+		public function get ($id) {
+			$connect = $this->connecting();
+			return $connect->query("SELECT * FROM users WHERE id = '" . $id . "'")->fetch();
+		}
+
+		public function newR ($name, $login, $password) {
+			$connect = $this->connecting();
+			$user = $connect->query("SELECT * FROM users WHERE login = '" . $login . "'")->fetch();
 			if (!$user) {
-				parent::Insert('users', $object);
-				return 'Вы успешно зарегистрировались!';
+				$connect->exec("INSERT INTO users VALUES (null, '" . $name . "', '" . $login . "', '" . $this->pass($name, $password) . "')");
+				return 'Вы успешно зарегистрированы';
 			} else {
-				return 'Пользователь с таким логином уже зарегистрирован!';
+				return 'Пользователь с таким логином уже зарегистрирован';
 			}
 		}
 
 		public function login ($login, $password) {
-			
-			$user = parent::Select('users', 'login', strip_tags($login));
-
+			$connect = $this->connecting();
+			$user = $connect->query("SELECT * FROM users WHERE login = '" . $login . "'")->fetch();
 			if ($user) {
-				if ($user['password'] == parent::Password($user['name'], strip_tags($password))) {
+				if ($user['password'] == $this->pass($user['name'], strip_tags($password))) {
     				$_SESSION['user_id'] = $user['id'];
+                    $_SESSION['is_admin'] = $user['is_admin'];
     				return 'Добро пожаловать в систему, ' . $user['name'] . '!';
 				} else {
 					return 'Пароль не верный!';
@@ -45,14 +49,13 @@
 		}
 
 		public function logout () {
-			
 			if (isset($_SESSION["user_id"])) {
-				unset($_SESSION["user_id"]);
+				$_SESSION["user_id"]=null;
 				session_destroy();
 				return true;
-			} else {
-				return false;
-			}
+			} 
+			return false;
+			
 		}
 	}
 ?>
