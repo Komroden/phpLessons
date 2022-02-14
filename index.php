@@ -1,1 +1,20 @@
-<?phpfunction __autoload($classname){	include_once("c/$classname.php");}$action = 'action_';$action .= (isset($_GET['act'])) ? $_GET['act'] : 'index';if (isset($_GET['c'])) {    $class = 'C_'.$_GET['c'];    $controller = new $class();} else {	$controller = new C_page();}$controller->Request($action);
+<?php
+
+    require_once 'autoload.php';
+
+    $method = (isset($_GET['method'])) ? $_GET['method'] : 'index'; 
+
+    if (isset($_GET['class'])) {
+        if ($_GET['class'] === 'page') {
+            $controller = new PageC();
+        } elseif ($_GET['class'] === 'user') {
+            $controller = new UserC();
+        } elseif ($_GET['class'] === 'cart') {
+            $controller = new CartC();
+        }
+    } else {
+        $controller = new PageC();
+    }
+
+    $controller -> request($method);
+
